@@ -124,7 +124,7 @@ st.markdown("""
             .hero h1{
                 font-family : Georgia, serif;
                 font-size : 85px;
-                letter-spacing : 5px;
+                letter-spacing : 8px;
                 margin : 0;
                 color : #F5F2FF;
                 text-shadow : 
