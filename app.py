@@ -273,7 +273,7 @@ st.markdown("""
 st.markdown("""
             <div class = "hero">
             <h1>Customer Churn Prediction</h1>
-            <p>Customer Churn Prediction System</p>
+            <p>Machine Learning-Driven Churn Prediction Engine</p>
             </div>
             """,unsafe_allow_html = True)
 
