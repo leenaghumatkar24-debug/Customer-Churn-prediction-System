@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="Customer Retention",
+    page_title="Customer Churn Prediction",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state = "collapsed"
@@ -273,7 +273,7 @@ st.markdown("""
 st.markdown("""
             <div class = "hero">
             <h1>Customer Retention</h1>
-            <p>AI-POWERED RETENTION PREDICTION SYSTEM</p>
+            <p>Customer Churn Prediction System</p>
             </div>
             """,unsafe_allow_html = True)
 
@@ -287,7 +287,7 @@ st.markdown("""
             <h2>About</h2>
 
             <p>
-            Customer Retention Prediction System is an AI-powered project designed        
+            Customer Churn Prediction System is an project designed        
             to predict whether a customer is likely to continue using a company's        
             products or services. It analyzes customer information and behavioral
             patterns to identify customers who may be at risk of leaving.
