@@ -272,7 +272,7 @@ st.markdown("""
 
 st.markdown("""
             <div class = "hero">
-            <h1>Customer Retention</h1>
+            <h1>Customer Churn Prediction</h1>
             <p>Customer Churn Prediction System</p>
             </div>
             """,unsafe_allow_html = True)
@@ -315,8 +315,8 @@ with col3:
     
 st.markdown("""
             <div  class = "footer">
-            <h3>Customer Retention Prediction System</h3>
-            <p>AI-Powered customer retention analysis and prediction</p>
+            <h3>Customer Churn Prediction System</h3>
+            <p>Machine Learning-Driven Churn Prediction Engine</p>
             <p>Developed as a Group Project</p>
             <p>© 2026 Customer Retention Prediction System</p>
             </div>
