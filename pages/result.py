@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
 
+# Set up page configurations once
 st.set_page_config(
     page_title = "Prediction Result",
     page_icon = "📊",
@@ -9,6 +11,7 @@ st.set_page_config(
     initial_sidebar_state = "collapsed"
 )
 
+# Hide default headers
 st.markdown("""
             <style>
             /* Hide Streamlit top bar */
@@ -21,19 +24,38 @@ st.markdown("""
                 display: none;
             }
             </style>
-            """,unsafe_allow_html = True)
+            """, unsafe_allow_html=True)
 
-feature_columns = joblib.load("model/feature_columns.pkl")
+# --- DYNAMIC PATH CROSS-PLATFORM SYSTEM ---
+# This automatically handles paths on both Windows and Linux without breaking
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Define root file locations (since files are in the root directory on GitHub)
+model_path = os.path.join(BASE_DIR, "churn_model.pkl")
+features_path = os.path.join(BASE_DIR, "feature_columns.pkl")
 
-feature_columns = joblib.load("model\\feature_columns.pkl")
+# If files are inside a "model" directory locally on your computer, check there as a fallback
+if not os.path.exists(model_path):
+    model_path = os.path.join(BASE_DIR, "model", "churn_model.pkl")
+if not os.path.exists(features_path):
+    features_path = os.path.join(BASE_DIR, "model", "feature_columns.pkl")
 
+# Safely load the variables to guarantee "model" is defined before calling .predict()
+try:
+    model = joblib.load(model_path)
+    feature_columns = joblib.load(features_path)
+except Exception as e:
+    st.error(f"⚠️ Critical Error loading model components: {e}")
+    st.stop()
+
+# --- INPUT SESSION CHECKS ---
 if "customer" not in st.session_state:
     st.warning("No customer information Input")
     if st.button("Go to Customer Input"):
         st.switch_page("pages/customer_input.py")
     st.stop()
 
+# --- CUSTOM CSS UI STYLING ---
 st.markdown("""
             <style>
             .stApp{
@@ -108,7 +130,7 @@ st.markdown("""
                 color : #C9FFD9;
                 text-shadow : 
                 0 0 12px rgba(100,255,170,0.35),
-                0 0 30px rgba(80,220,150,0..20);
+                0 0 30px rgba(80,220,150,0.20);
                 font-family : Georgia, serif;
             }
             .result-card h1.churn{
@@ -120,7 +142,7 @@ st.markdown("""
             }
             .metric-card{
                 width : 100%;
-                height : 190%;
+                height : 100%;
                 background : 
                 linear-gradient(
                     135deg,
@@ -169,7 +191,7 @@ st.markdown("""
             }
             .confidence h1{
                 color : #D8D0FF;
-                font-family : Gorgia, serif;
+                font-family : Georgia, serif;
                 font-size : 21px;
                 font-weight : bold;
                 text-align : left;
@@ -178,10 +200,10 @@ st.markdown("""
             .confidence p{
                 color : #F5F2FF;
                 font-size : 21px;
-                font-family : Gorgia, serif;
+                font-family : Georgia, serif;
                 font-weight : bold;
                 text-align : left;
-                margin-bottom : 14px 0 0 0;
+                margin: 14px 0 0 0;
             }
             .confidence-bar{
                 width : 100%;
@@ -201,7 +223,7 @@ st.markdown("""
             }
             .recommendation{
                 width : 100%;
-                min-height : 190px;
+                min-height : 140px;
                 background : 
                 linear-gradient(
                     135deg,
@@ -232,7 +254,7 @@ st.markdown("""
             }
             .retention-box{
                 width : 100%;
-                margin : 70px;
+                margin : 20px 0;
                 background : linear-gradient(
                     135deg,
                     #30205C,
@@ -240,59 +262,19 @@ st.markdown("""
                 );
                 border : 1px solid rgba(169,154,255,0.35);
                 border-radius : 12px;
-                display : flex;
-                align-items : center;
+                padding : 25px 30px;
                 color : #F5F2FF;
-                font-family : Georgia , serif;
-                font-size : 20px;
-                font-weight : bold;
-                letter-spacing : 1px;
+                font-family : Georgia, serif;
+                font-size : 16px;
+                line-height : 1.6;
                 box-shadow : 
                 0 8px 25px rgba(0,0,0,0.20),
                 0 0 18px rgba(90,60,255,0.12);
-                margin-top : 10px 0;
-            }
-            .stButton > button{
-                width : 320px;
-                height : 58px;
-                background : 
-                linear-gradient(
-                    135deg,
-                    #6C4DFF,
-                    #4B2E83
-                    );
-                color : white;
-                border : 1px solid #9B7CFF;
-                border-radius : 10px;
-                font-size : 16px;
-                font-weight : bold;
-                letter-spacing : 1.5px;
-                box-shadow : 
-                0 8px 25px rgba(90,60,255,0.30);
-                transition : 0.3s;
-            }
-            .stbutton >button:hover{
-                background : 
-                linear-gradient(
-                    135deg,
-                    #805FFF,
-                    #5B3A9E
-                    );
-                color : white;
-                border : 1px solid #B9A4FF;
-                box-shadow : 
-                0 10px 30px rgba(90,60,255,0.45);
-                transform : translateY(-2px);
             }
             </style>
-            """,unsafe_allow_html = True)
+            """, unsafe_allow_html=True)
 
-st.markdown("""
-            <div class = "header">
-            <h1>Prediction Result</h1>
-            </div>
-            """,unsafe_allow_html = True)
-
+# --- INFERENCE ENGINE LOGIC ---
 customer_data = st.session_state.customer
 customer = pd.DataFrame([customer_data])
 customer = pd.get_dummies(customer)
@@ -301,14 +283,14 @@ customer = customer.reindex(
     fill_value = 0
 )
 
+# Run ML inference
 prediction = model.predict(customer)[0]
 
 if hasattr(model, "predict_proba"):
-    probalility = model.predict_proba(customer)[0]
-    churn_probability = probalility[1] * 100
-    retention_probability = probalility[0] * 100
+    probability = model.predict_proba(customer)[0]
+    churn_probability = probability[1] * 100
+    retention_probability = probability[0] * 100
     confidence = max(churn_probability, retention_probability)
-    
 else:
     churn_probability = None
     retention_probability = None
@@ -317,64 +299,11 @@ else:
 if prediction == 0:
     result = "CUSTOMER LIKELY TO STAY"
     recommendation = """
-    The customer shows a lower probability of churn.
-    Maintain the current customer experience and consider
-    loyalty benefits or personalised offers to strengthen
-    the relationship.    
+    The customer profile shows high account resilience with a lower statistical probability of churn.
     """
 else:
     result = "CUSTOMER LIKELY TO CHURN"
     recommendation = """
-    The customer shows a higher probability of churn.
-    Consider personalised offers, improved customer support,
-    and a targeted retention campaign.    
+    The customer profile shows a higher statistical probability of churn.
+    Consider targeted retention strategies for this customer.
     """
-
-result_class = "stay" if prediction == 0 else "churn"
-st.markdown(f"""
-            <div class = "result-card">
-            <h1 class = "{result_class}">{result}</h1>
-            </div>
-            """,unsafe_allow_html = True)
-
-col1,col2 = st.columns([2,5] , gap = "medium")
-
-with col1:
-    if churn_probability is not None:
-        st.markdown(f"""
-                    <div class = "metric-card">
-                    <h3>Churn Probability</h3>
-                    <h1>{churn_probability:.1f}%</h1>
-                    </div>
-                    """,unsafe_allow_html = True)
-        
-with col2:
-        st.markdown(f"""
-                    <div class = "confidence">
-                    <h1>Retention Confidence</h1>
-                    <div class = "confidence-bar">
-                    <div class = "confidence-fill" style = "width : {retention_probability:.1f}%;">
-                    </div>
-                    </div>
-                    <p>{retention_probability:.1f}%</p>
-                    </div>
-                    """,unsafe_allow_html = True)
-        
-st.markdown(f"""
-            <div class = "recommendation">
-            <h2>💡 Recommended Action</h2>
-            <p>{recommendation}</p>
-            </div>
-            """,unsafe_allow_html = True)
-
-with st.expander("View Customer Information"):
-    st.dataframe(
-        customer,
-        use_container_width = True
-    )
-    
-st.markdown("<br>",unsafe_allow_html = True)
-
-if st.button("← Go To Another Customer"):
-    st.session_state.pop("customer",None)
-    st.switch_page("pages/customer_input.py")
