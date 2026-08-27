@@ -338,19 +338,13 @@ if confidence is not None:
         """, unsafe_allow_html=True)
 
     with col2:
-        confidence_html = f"""
-<div class="confidence">
-    <h1>Retention Confidence</h1>
-
-    <div class="confidence-bar">
-        <div class="confidence-fill"
-             style="width: {retention_probability:.1f}%;">
+        confidence_html = f"""<div class="confidence">
+           <h1>Retention Confidence</h1>
+        <div class="confidence-bar">
+        <div class="confidence-fill" style="width: {retention_probability:.1f}%;"></div>
         </div>
-    </div>
-
     <p>{retention_probability:.1f}%</p>
-</div>
-"""
+        </div>"""
         st.markdown(confidence_html, unsafe_allow_html=True)
         
 # Recommendation
