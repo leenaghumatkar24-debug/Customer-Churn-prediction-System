@@ -22,7 +22,7 @@ st.markdown("""
             </style>
             """,unsafe_allow_html = True)
 
-df = pd.read_csv("data\\Telco_Customer_Churn.csv")
+df = pd.read_csv("data/Telco_Customer_Churn.csv")
 df["TotalCharges"] = pd.to_numeric(
     df["TotalCharges"],
     errors = "coerce"
