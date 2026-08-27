@@ -324,10 +324,9 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# Probability / Confidence
+# Probability / Retention Confidence
 if confidence is not None:
-
-    col1, col2, col3 = st.columns(3)
+    col1, col2 = st.columns([1, 2.5], gap="medium")
 
     with col1:
         st.markdown(f"""
@@ -339,41 +338,48 @@ if confidence is not None:
 
     with col2:
         st.markdown(f"""
-        <div class="metric-card">
-            <h3>Retention Probability</h3>
-            <h1>{retention_probability:.1f}%</h1>
-        </div>
-        """, unsafe_allow_html=True)
+        <div class="confidence">
+            <h1>Retention Confidence</h1>
 
-    with col3:
-        st.markdown(f"""
-        <div class="metric-card">
-            <h3>Prediction Confidence</h3>
-            <h1>{confidence:.1f}%</h1>
-        </div>
-        """, unsafe_allow_html=True)
-
-# Confidence bar
-if confidence is not None:
-
-    st.markdown(f"""
-    <div class="confidence">
-        <h1>Prediction Confidence</h1>
-
-        <div class="confidence-bar">
-            <div class="confidence-fill"
-                 style="width: {confidence}%;">
+            <div class="confidence-bar">
+                <div class="confidence-fill"
+                     style="width: {retention_probability:.1f}%;">
+                </div>
             </div>
-        </div>
 
-        <p>{confidence:.1f}% confidence</p>
-    </div>
-    """, unsafe_allow_html=True)
+            <p>{retention_probability:.1f}%</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 # Recommendation
+if prediction == 0:
+    recommendation_text = (
+        "The customer shows a lower probability of churn. "
+        "Maintain the current customer experience and consider loyalty "
+        "benefits or personalised offers to strengthen the relationship."
+    )
+else:
+    recommendation_text = (
+        "The customer shows a higher probability of churn. "
+        "Consider targeted retention strategies, personalised offers, "
+        "and proactive customer support."
+    )
+
 st.markdown(f"""
 <div class="recommendation">
-    <h2>Recommendation</h2>
-    <p>{recommendation}</p>
+    <h2>💡 Recommended Action</h2>
+    <p>{recommendation_text}</p>
 </div>
 """, unsafe_allow_html=True)
+
+# Customer information
+with st.expander("View Customer Information"):
+    st.dataframe(
+        pd.DataFrame([customer_data]),
+        use_container_width=True,
+        hide_index=True
+    )
+
+# Navigation button
+if st.button("← Go To Another Customer", use_container_width=False):
+    st.switch_page("pages/customer_input.py")
