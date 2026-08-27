@@ -23,7 +23,7 @@ st.markdown("""
             </style>
             """,unsafe_allow_html = True)
 
-model = joblib.load("model\\churn_model.pkl")
+model = joblib.load("model/churn_model.pkl")
 
 feature_columns = joblib.load("model\\feature_columns.pkl")
 
