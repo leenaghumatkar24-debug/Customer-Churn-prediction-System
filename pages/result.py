@@ -326,6 +326,7 @@ st.markdown(f"""
 
 # Probability / Retention Confidence
 if confidence is not None:
+
     col1, col2 = st.columns([1, 2.5], gap="medium")
 
     with col1:
@@ -350,7 +351,7 @@ if confidence is not None:
             <p>{retention_probability:.1f}%</p>
         </div>
         """, unsafe_allow_html=True)
-
+        
 # Recommendation
 if prediction == 0:
     recommendation_text = (
