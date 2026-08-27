@@ -307,3 +307,73 @@ else:
     The customer profile shows a higher statistical probability of churn.
     Consider targeted retention strategies for this customer.
     """
+# --- DISPLAY RESULTS ---
+
+st.markdown("""
+<div class="header">
+    <h1>Prediction Result</h1>
+</div>
+""", unsafe_allow_html=True)
+
+# Result
+result_class = "stay" if prediction == 0 else "churn"
+
+st.markdown(f"""
+<div class="result-card">
+    <h1 class="{result_class}">{result}</h1>
+</div>
+""", unsafe_allow_html=True)
+
+# Probability / Confidence
+if confidence is not None:
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown(f"""
+        <div class="metric-card">
+            <h3>Churn Probability</h3>
+            <h1>{churn_probability:.1f}%</h1>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown(f"""
+        <div class="metric-card">
+            <h3>Retention Probability</h3>
+            <h1>{retention_probability:.1f}%</h1>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col3:
+        st.markdown(f"""
+        <div class="metric-card">
+            <h3>Prediction Confidence</h3>
+            <h1>{confidence:.1f}%</h1>
+        </div>
+        """, unsafe_allow_html=True)
+
+# Confidence bar
+if confidence is not None:
+
+    st.markdown(f"""
+    <div class="confidence">
+        <h1>Prediction Confidence</h1>
+
+        <div class="confidence-bar">
+            <div class="confidence-fill"
+                 style="width: {confidence}%;">
+            </div>
+        </div>
+
+        <p>{confidence:.1f}% confidence</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Recommendation
+st.markdown(f"""
+<div class="recommendation">
+    <h2>Recommendation</h2>
+    <p>{recommendation}</p>
+</div>
+""", unsafe_allow_html=True)
