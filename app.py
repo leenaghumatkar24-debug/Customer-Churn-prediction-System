@@ -308,8 +308,8 @@ col1,col2,col3,col4,col5 = st.columns(5)
 
 with col3:
                 
-    #if st.button("CLICK TO BEGIN"):
-        #st.switch_page("pages\customer_input.py")
+    if st.button("CLICK TO BEGIN"):
+        st.switch_page("pages/customer_input.py")
         
     st.markdown("</div>" , unsafe_allow_html =True)
     
